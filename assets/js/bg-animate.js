@@ -1,4 +1,4 @@
-var images = [ 'assets/js/1.webp'];
+var images = [ 'assets/js/1.png','assets/js/2.png','assets/js/4.png'];
 var intervalTime = 5000;
 var currentIndex = 0;
 
