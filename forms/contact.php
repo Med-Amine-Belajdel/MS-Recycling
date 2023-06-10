@@ -1,41 +1,48 @@
+
 <?php
-  /**
-  * Requires the "PHP Email Form" library
-  * The "PHP Email Form" library is available only in the pro version of the template
-  * The library should be uploaded to: vendor/php-email-form/php-email-form.php
-  * For more info and help: https://bootstrapmade.com/php-email-form/
-  */
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-  // Replace contact@example.com with your real receiving email address
-  $receiving_email_address = 'contact@example.com';
+require 'vendor/autoload.php';
 
-  if( file_exists($php_email_form = '../assets/vendor/php-email-form/php-email-form.php' )) {
-    include( $php_email_form );
-  } else {
-    die( 'Unable to load the "PHP Email Form" Library!');
-  }
+// Replace with your actual email address and display name
+$company_email = 'belajdelmedamine@gmail.com';
+$company_name = 'MS recycling';
 
-  $contact = new PHP_Email_Form;
-  $contact->ajax = true;
-  
-  $contact->to = $receiving_email_address;
-  $contact->from_name = $_POST['name'];
-  $contact->from_email = $_POST['email'];
-  $contact->subject = $_POST['subject'];
+// Get form data
+$name = $_POST['name'] ?? '';
+$email = $_POST['email'] ?? '';
+$subject = $_POST['subject'] ?? '';
+$message = $_POST['message'] ?? '';
 
-  // Uncomment below code if you want to use SMTP to send emails. You need to enter your correct SMTP credentials
-  /*
-  $contact->smtp = array(
-    'host' => 'example.com',
-    'username' => 'example',
-    'password' => 'pass',
-    'port' => '587'
-  );
-  */
+// Create a new PHPMailer instance
+$mail = new PHPMailer(true);
 
-  $contact->add_message( $_POST['name'], 'From');
-  $contact->add_message( $_POST['email'], 'Email');
-  $contact->add_message( $_POST['message'], 'Message', 10);
+try {
+    // Server settings
+    $mail->isSMTP();
+    $mail->Host       = 'smtp.gmail.com';  // Replace with your SMTP server address
+    $mail->SMTPAuth   = true;
+    $mail->Username   = 'belajdelmedamine@gmail.com';      // Replace with your SMTP username
+    $mail->Password   = 'xtzslxqjzhcnrgti';      // Replace with your SMTP password
+    $mail->SMTPSecure = 'tls';
+    $mail->Port       = 587;
 
-  echo $contact->send();
+    // Sender and recipient
+    $mail->setFrom($email, $name);
+    $mail->addAddress($company_email, $company_name);
+
+    // Email content
+    $mail->isHTML(false);
+    $mail->Subject = $subject;
+    $mail->Body    = $message;
+
+    if ($mail->send()) {
+      // Email sent successfully
+      echo 'Message has been sent';}
+} catch (Exception $e) {
+    // An error occurred while sending the email
+    echo 'Message could not be sent. Error: ', $mail->ErrorInfo;
+}
 ?>
+
